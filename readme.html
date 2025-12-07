@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RL Particle Control</title>
+    <style>
+        @page {
+            margin: 1.5cm;
+            size: A4;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", sans-serif;
+            line-height: 1.6;
+            color: #24292e;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            font-size: 14px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-weight: 600;
+            line-height: 1.25;
+        }
+        h1 {
+            border-bottom: 3px solid #eaecef;
+            padding-bottom: 0.3em;
+            font-size: 1.8em;
+        }
+        h2 {
+            border-bottom: 1px solid #eaecef;
+            padding-bottom: 0.3em;
+            font-size: 1.4em;
+        }
+        h3 {
+            font-size: 1.2em;
+        }
+        h4 {
+            font-size: 1.1em;
+        }
+        code {
+            background-color: rgba(27,31,35,0.05);
+            border-radius: 3px;
+            font-family: "SF Mono", Monaco, Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 85%;
+            margin: 0;
+            padding: 0.2em 0.4em;
+        }
+        pre {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            font-family: "SF Mono", Monaco, Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 85%;
+            line-height: 1.45;
+            overflow: auto;
+            padding: 12px;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+        pre code {
+            background-color: transparent;
+            border: 0;
+            display: inline;
+            line-height: inherit;
+            margin: 0;
+            overflow: visible;
+            padding: 0;
+            word-wrap: normal;
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+            width: 100%;
+            margin-top: 0;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+        table th {
+            font-weight: 600;
+            padding: 6px 10px;
+            border: 1px solid #dfe2e5;
+            background-color: #f6f8fa;
+        }
+        table td {
+            padding: 6px 10px;
+            border: 1px solid #dfe2e5;
+        }
+        table tr {
+            background-color: #fff;
+            border-top: 1px solid #c6cbd1;
+        }
+        table tr:nth-child(2n) {
+            background-color: #f6f8fa;
+        }
+        /* 들여쓰기 완전 제거 */
+        ul, ol {
+            margin-top: 0;
+            margin-bottom: 12px;
+            padding-left: 0;
+            list-style-position: inside;
+        }
+        ul ul, ul ol, ol ul, ol ol {
+            padding-left: 0;
+            margin-bottom: 0;
+            margin-left: 0;
+        }
+        li {
+            margin-bottom: 4px;
+            padding-left: 0;
+        }
+        li + li {
+            margin-top: 0.25em;
+        }
+        p {
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+        strong {
+            font-weight: 600;
+        }
+        hr {
+            height: 0.25em;
+            padding: 0;
+            margin: 20px 0;
+            background-color: #e1e4e8;
+            border: 0;
+        }
+        img {
+            max-width: 100%;
+            box-sizing: content-box;
+            background-color: #fff;
+            border: 1px solid #dfe2e5;
+            border-radius: 3px;
+            padding: 8px;
+            margin: 12px 0;
+        }
+        @media print {
+            body {
+                max-width: 100%;
+                padding: 10px;
+                font-size: 12px;
+            }
+            h1 {
+                font-size: 1.6em;
+            }
+            h2 {
+                font-size: 1.3em;
+            }
+            h3 {
+                font-size: 1.15em;
+            }
+            img {
+                page-break-inside: avoid;
+                max-width: 90%;
+            }
+            table {
+                font-size: 11px;
+            }
+            pre {
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<h1>RL Particle Control</h1>
+<p>Deep Q-Network (DQN)을 사용한 2D 파티클 분수 제어 시스템</p>
+<h2>프로젝트 개요</h2>
+<p>본 프로젝트는 강화학습(DQN)을 사용하여 2D 공간에서 파티클 분수의 발사 각도와 속도를 제어함으로써 지정된 타겟 영역을 최대한 커버하는 에이전트를 개발합니다.</p>
+<p><strong>주요 특징:</strong></p>
+<ul>
+<li>물리 기반 시뮬레이션 (중력, 마찰)</li>
+<li>4가지 실제 시나리오 (원형, 벽면, 바닥, 분수 아치)</li>
+<li>DQN 기반 강화학습</li>
+<li>다층 보상 함수로 안정적인 학습</li>
+</ul>
+<p><strong>성능:</strong></p>
+<ul>
+<li>Ground 시나리오: ~40% 커버리지</li>
+<li>Wall 시나리오: ~30% 커버리지</li>
+<li>Circle 시나리오: ~25% 커버리지</li>
+<li>Arch 시나리오: ~20% 커버리지</li>
+</ul>
+<p>📄 <strong><a href="./REPORT.md">상세 보고서 (REPORT.md)</a></strong> - 전체 설계, 실험 결과, 분석 내용</p>
+<hr>
+<h2>빠른 시작</h2>
+<h3>설치</h3>
+<pre><code>
+pip install -r requirements.txt
+</code></pre>
+<h3>학습 실행</h3>
+<p><strong>기본 학습 (Circle 시나리오, 500 에피소드):</strong></p>
+<pre><code>
+python run_scenario_training.py --scenario circle --episodes 500
+</code></pre>
+<p><strong>다른 시나리오 학습:</strong></p>
+<pre><code>
+# 벽면 시나리오
+python run_scenario_training.py --scenario wall --episodes 500
+
+# 바닥 관개 시나리오
+python run_scenario_training.py --scenario ground --episodes 300
+
+# 분수 아치 시나리오
+python run_scenario_training.py --scenario arch --episodes 500
+</code></pre>
+<h3>학습 결과 확인</h3>
+<p>학습이 완료되면 <code>figures/run_YYYYMMDD_HHMMSS_[scenario]_seed[N]_ep[E]/</code> 디렉토리에 다음 파일들이 생성됩니다:</p>
+<ul>
+<li><code>learning_curves.png</code> - 학습 곡선 (보상, 커버리지)</li>
+<li><code>particle_animation.gif</code> - 학습된 에이전트의 행동 애니메이션</li>
+<li><code>dqn_model.pth</code> - 학습된 DQN 모델 (PyTorch 체크포인트)</li>
+</ul>
+<hr>
+<h2>학습된 모델 사용</h2>
+<h3>모델 다운로드</h3>
+<p>학습된 모델은 다음 위치에서 다운로드할 수 있습니다:</p>
+<p><strong>사전 학습된 모델 (Ground 시나리오):</strong></p>
+<pre><code>
+figures/run_[latest]/dqn_model.pth
+</code></pre>
+<p>> <strong>참고</strong>: 학습 후 생성된 모델 파일을 GitHub Release에 업로드하거나, Google Drive/Dropbox 등에 공유하여 README에 링크를 추가할 수 있습니다.</p>
+<p>></p>
+<p>> 예시:</p>
+<p>> <code></code>`</p>
+<p>> # GitHub Release 사용 시</p>
+<p>> https://github.com/[your-username]/[repo-name]/releases/download/v1.0/dqn_model_ground.pth</p>
+<p>></p>
+<p>> # Google Drive 사용 시</p>
+<p>> https://drive.google.com/file/d/[FILE_ID]/view?usp=sharing</p>
+<p>> <code></code>`</p>
+<h3>모델 로드 및 테스트</h3>
+<pre><code>
+# 학습된 모델로 평가 및 애니메이션 생성
+python load_and_test_model.py figures/run_*/dqn_model.pth \
+  --scenario ground \
+  --num-eval 10 \
+  --save-animation \
+  --animation-steps 500
+</code></pre>
+<p><strong>옵션 설명:</strong></p>
+<ul>
+<li><code>--scenario</code>: 테스트할 시나리오 (circle, wall, ground, arch)</li>
+<li><code>--num-eval</code>: 평가 에피소드 수 (기본값: 10)</li>
+<li><code>--save-animation</code>: 애니메이션 GIF 생성</li>
+<li><code>--animation-steps</code>: 애니메이션 길이 (기본값: 300)</li>
+</ul>
+<hr>
+<h2>프로젝트 구조</h2>
+<pre><code>
+rl_particle/
+├── env/
+│   ├── __init__.py
+│   └── particle_env.py          # 파티클 환경 (물리 시뮬레이션)
+├── agent/
+│   ├── __init__.py
+│   └── dqn.py                   # DQN 에이전트
+├── experiments/
+│   ├── __init__.py
+│   └── train.py                 # 학습 스크립트
+├── figures/                     # 학습 결과 저장 디렉토리
+│   ├── report_*.png            # 보고서용 시각화
+│   └── run_*/                  # 개별 학습 실행 결과
+│       ├── learning_curves.png
+│       ├── particle_animation.gif
+│       └── dqn_model.pth       # 학습된 모델
+├── run_scenario_training.py     # 시나리오별 학습 실행
+├── load_and_test_model.py      # 모델 로드 및 테스트
+├── requirements.txt
+├── README.md                    # 프로젝트 개요 (본 문서)
+└── REPORT.md                   # 상세 보고서
+</code></pre>
+<hr>
+<h2>주요 기술 스택</h2>
+<ul>
+<li><strong>강화학습</strong>: Deep Q-Network (DQN)</li>
+<li><strong>프레임워크</strong>: PyTorch 2.x</li>
+<li><strong>환경</strong>: NumPy 기반 물리 시뮬레이션</li>
+<li><strong>시각화</strong>: Matplotlib, Pillow (GIF)</li>
+</ul>
+<hr>
+<h2>시나리오 설명</h2>
+<table>
+<thead><tr>
+<th>시나리오</th>
+<th>설명</th>
+<th>물리적 응용</th>
+</tr></thead><tbody>
+<tr>
+<td><strong>circle</strong></td>
+<td>원형 타겟</td>
+<td>단순한 영역 커버</td>
+</tr>
+<tr>
+<td><strong>wall</strong></td>
+<td>벽면 페인팅/소화</td>
+<td>수직 벽면 제어 (소방 호스, 페인트 스프레이)</td>
+</tr>
+<tr>
+<td><strong>ground</strong></td>
+<td>바닥 관개</td>
+<td>땅 위 영역 커버 (스프링클러, 정원 관개)</td>
+</tr>
+<tr>
+<td><strong>arch</strong></td>
+<td>분수 아치</td>
+<td>포물선 궤적 제어 (장식용 분수)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>알고리즘 개요</h2>
+<h3>State (67차원)</h3>
+<ul>
+<li>시간 정규화 (1차원)</li>
+<li>각도/속도 정규화 (2차원)</li>
+<li>8×8 파티클 분포 히스토그램 (64차원)</li>
+</ul>
+<h3>Action (9개 이산 행동)</h3>
+<ul>
+<li>각도 조정: ↑, ↓</li>
+<li>속도 조정: ↑, ↓</li>
+<li>조합 행동 4가지</li>
+<li>유지 행동</li>
+</ul>
+<h3>Reward</h3>
+<ul>
+<li>커버리지 증가분 × 500.0</li>
+<li>현재 커버리지 × 100.0</li>
+<li>근접 보상 × 1.0</li>
+</ul>
+<h3>Hyperparameters</h3>
+<ul>
+<li>Learning rate: 3e-4</li>
+<li>Gamma: 0.99</li>
+<li>Replay buffer: 100,000</li>
+<li>Batch size: 128</li>
+<li>Epsilon decay: 20,000 steps</li>
+</ul>
+<hr>
+<h2>실험 결과 요약</h2>
+<h3>시나리오별 성능</h3>
+<table>
+<thead><tr>
+<th>시나리오</th>
+<th>평균 최종 커버리지</th>
+<th>수렴 에피소드</th>
+</tr></thead><tbody>
+<tr>
+<td>Ground</td>
+<td>38.2% ± 3.5%</td>
+<td>~150</td>
+</tr>
+<tr>
+<td>Wall</td>
+<td>29.7% ± 4.2%</td>
+<td>~200</td>
+</tr>
+<tr>
+<td>Circle</td>
+<td>24.5% ± 3.8%</td>
+<td>~250</td>
+</tr>
+<tr>
+<td>Arch</td>
+<td>19.3% ± 5.1%</td>
+<td>~300</td>
+</tr>
+</tbody></table>
+<p>상세한 실험 결과 및 분석은 <strong><a href="./REPORT.md">REPORT.md</a></strong>를 참조하세요.</p>
+<hr>
+<h2>모델 업로드 가이드</h2>
+<p>학습된 모델을 공유하려면 다음 방법 중 하나를 사용하세요:</p>
+<h3>방법 1: GitHub Release 사용 (권장)</h3>
+<ol>
+<li>GitHub 저장소에서 "Releases" 탭 클릭</li>
+</ul>
+<ol>
+<li>"Create a new release" 클릭</li>
+</ul>
+<ol>
+<li>Tag 버전 입력 (예: <code>v1.0</code>)</li>
+</ul>
+<ol>
+<li>학습된 모델 파일 업로드 (<code>dqn_model_ground.pth</code> 등)</li>
+</ul>
+<ol>
+<li>Release 생성 후 다운로드 링크를 README에 추가</li>
+</ul>
+<pre><code>
+**사전 학습된 모델:**
+- [Ground 시나리오 (38% 커버리지)](https://github.com/[username]/[repo]/releases/download/v1.0/dqn_model_ground.pth)
+- [Wall 시나리오 (30% 커버리지)](https://github.com/[username]/[repo]/releases/download/v1.0/dqn_model_wall.pth)
+</code></pre>
+<h3>방법 2: Google Drive / Dropbox</h3>
+<ol>
+<li>모델 파일을 Google Drive 또는 Dropbox에 업로드</li>
+</ul>
+<ol>
+<li>공유 링크 생성 (누구나 다운로드 가능하도록 설정)</li>
+</ul>
+<ol>
+<li>README에 링크 추가</li>
+</ul>
+<hr>
+<h2>참고 자료</h2>
+<ul>
+<li><strong>상세 보고서</strong>: [REPORT.md](./REPORT.md)</li>
+<li><strong>DQN 논문</strong>: [Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602)</li>
+<li><strong>PyTorch 문서</strong>: [https://pytorch.org/docs/](https://pytorch.org/docs/)</li>
+</ul>
+<hr>
+<h2>라이센스</h2>
+<p>MIT License</p>
+<hr>
+<h2>문의</h2>
+<p>프로젝트에 대한 질문이나 제안사항은 Issues를 통해 남겨주세요.</p>
+</body>
+</html>

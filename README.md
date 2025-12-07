@@ -173,7 +173,7 @@ rl_particle/
 | Circle | 24.5% ± 3.8% | ~250 |
 | Arch | 19.3% ± 5.1% | ~300 |
 
-상세한 실험 결과 및 분석은 **[REPORT.md](./REPORT.pdf)**를 참조하세요.
+상세한 실험 결과 및 분석은 [REPORT.pdf](./REPORT.pdf)**를 참조하세요.
 
 ---
 

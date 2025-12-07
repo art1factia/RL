@@ -437,7 +437,7 @@ def visualize_episode_trajectories(env: ParticleEnv, agent: DQNAgent, max_steps:
     plt.show()
 
 if __name__ == "__main__":
-    device = "cpu"  # 필요하면 "cuda"로 변경
+    device = "cpu"
 
     # 개선 19: 학습 파라미터 설정
     # num_episodes를 늘려서 충분한 학습 시간 확보 (500 -> 1000)
@@ -465,17 +465,3 @@ if __name__ == "__main__":
 
     print("\n학습 완료!")
     print(f"최종 평균 커버리지: {history['eval_means'][-1]:.3f}")
-
-    # 2) 추가 시각화를 원하면:
-    # agent = history["agent"]
-    # cfg = history["env_cfg"]
-    # target_mask = history["target_mask"]
-    # env = ParticleEnv(target_mask=target_mask, config=cfg)
-    # visualize_episode_trajectories(env, agent, max_steps=cfg.max_steps)
-
-    # 3) 여러 seed로 실험해보고 싶으면:
-    # histories, final_covs = run_multiple_seeds(
-    #     seeds=[0, 1, 2, 3, 4],
-    #     num_episodes=500,
-    #     device=device,
-    # )

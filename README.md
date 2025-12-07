@@ -173,13 +173,13 @@ rl_particle/
 | Circle | 24.5% ± 3.8% | ~250 |
 | Arch | 19.3% ± 5.1% | ~300 |
 
-상세한 실험 결과 및 분석은 **[REPORT.md](./REPORT.md)**를 참조하세요.
+상세한 실험 결과 및 분석은 **[REPORT.md](./REPORT.pdf)**를 참조하세요.
 
 ---
 
 ## 참고 자료
 
-- **상세 보고서**: [REPORT.md](./REPORT.md)
+- **상세 보고서**: [REPORT.pdf](./REPORT.pdf)
 - **DQN 논문**: [Playing Atari with Deep Reinforcement Learning](https://arxiv.org/abs/1312.5602)
 - **PyTorch 문서**: [https://pytorch.org/docs/](https://pytorch.org/docs/)
 

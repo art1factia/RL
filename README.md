@@ -18,7 +18,7 @@ Deep Q-Network (DQN)을 사용한 2D 파티클 분수 제어 시스템
 - Circle 시나리오: ~25% 커버리지
 - Arch 시나리오: ~20% 커버리지
 
-📄 **[상세 보고서 (REPORT.md)](./REPORT.md)** - 전체 설계, 실험 결과, 분석 내용
+**[상세 보고서 (REPORT.pdf)](./REPORT.pdf)** - 전체 설계, 실험 결과, 분석 내용
 
 ---
 
@@ -65,21 +65,8 @@ python run_scenario_training.py --scenario arch --episodes 500
 
 학습된 모델은 다음 위치에서 다운로드할 수 있습니다:
 
-**사전 학습된 모델 (Ground 시나리오):**
-```
-figures/run_[latest]/dqn_model.pth
-```
-
-> **참고**: 학습 후 생성된 모델 파일을 GitHub Release에 업로드하거나, Google Drive/Dropbox 등에 공유하여 README에 링크를 추가할 수 있습니다.
->
-> 예시:
-> ```
-> # GitHub Release 사용 시
-> https://github.com/[your-username]/[repo-name]/releases/download/v1.0/dqn_model_ground.pth
->
-> # Google Drive 사용 시
-> https://drive.google.com/file/d/[FILE_ID]/view?usp=sharing
-> ```
+**사전 학습된 모델 (시나리오 별):**
+[model download](https://github.com/art1factia/RL/releases/tag/dqn_model)
 
 ### 모델 로드 및 테스트
 
@@ -123,7 +110,7 @@ rl_particle/
 ├── load_and_test_model.py      # 모델 로드 및 테스트
 ├── requirements.txt
 ├── README.md                    # 프로젝트 개요 (본 문서)
-└── REPORT.md                   # 상세 보고서
+└── REPORT.pdf                   # 상세 보고서
 ```
 
 ---
@@ -187,32 +174,6 @@ rl_particle/
 | Arch | 19.3% ± 5.1% | ~300 |
 
 상세한 실험 결과 및 분석은 **[REPORT.md](./REPORT.md)**를 참조하세요.
-
----
-
-## 모델 업로드 가이드
-
-학습된 모델을 공유하려면 다음 방법 중 하나를 사용하세요:
-
-### 방법 1: GitHub Release 사용 (권장)
-
-1. GitHub 저장소에서 "Releases" 탭 클릭
-2. "Create a new release" 클릭
-3. Tag 버전 입력 (예: `v1.0`)
-4. 학습된 모델 파일 업로드 (`dqn_model_ground.pth` 등)
-5. Release 생성 후 다운로드 링크를 README에 추가
-
-```markdown
-**사전 학습된 모델:**
-- [Ground 시나리오 (38% 커버리지)](https://github.com/[username]/[repo]/releases/download/v1.0/dqn_model_ground.pth)
-- [Wall 시나리오 (30% 커버리지)](https://github.com/[username]/[repo]/releases/download/v1.0/dqn_model_wall.pth)
-```
-
-### 방법 2: Google Drive / Dropbox
-
-1. 모델 파일을 Google Drive 또는 Dropbox에 업로드
-2. 공유 링크 생성 (누구나 다운로드 가능하도록 설정)
-3. README에 링크 추가
 
 ---
 
